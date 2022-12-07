@@ -1,2 +1,6 @@
-# adventjs-2022
-Solve Midudev adventjs 2022
+# adventjs
+
+Solutions for Adventjs 2021 & 2022.
+
+- [2021](./2021/).
+- [2022](./2022/).
