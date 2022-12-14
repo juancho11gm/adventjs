@@ -1,20 +1,10 @@
 import assert from 'assert';
 
 function checkPart(part: string) {
-  const isPalindrome = (str: string) => {
-    return str === str.split('').reverse().join('');
-  }
-
-  if (isPalindrome(part)) return true;
-
-  const combinations = [];
-  for (let i = 0; i < part.length; i++) {
-    const firstHalf = part.slice(0, i);
-    const secondHalf = part.slice(i + 1, part.length);
-    combinations.push(firstHalf + secondHalf);
-  }
-
-  return combinations.some(comb => isPalindrome(comb));
+  return [...part].some((_, i, arr) => {
+    let croppedLetter = arr.filter((_, j) => i != j);
+    return croppedLetter.join('') == croppedLetter.reverse().join('');
+  })
 }
 
 try {

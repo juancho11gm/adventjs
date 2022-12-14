@@ -1,19 +1,11 @@
 import assert from 'assert';
 
 function fitsInOneBox(boxes: Box[]) {
-  const sortBoxes = (boxes: Box[]) => boxes.sort((boxa, boxb) => boxa.w - boxb.w);
-  const fitInBox = (box1: Box, box2: Box) => {
-    return box1.h < box2.h && box1.w < box2.w && box1.l < box2.l;
-  };
-
-  const allFit = sortBoxes(boxes).every((box: Box, i: number) => {
-    const isLast = i === boxes.length - 1;
-    if (isLast) return true;
-    const fitInNextBox = fitInBox(box, boxes[i + 1]);
-    return fitInNextBox;
-  });
-
-  return allFit;
+  return boxes.sort((boxa, boxb) => {
+    return (boxb.l + boxb.w + boxb.h) - (boxa.l + boxa.w + boxa.h);
+  }).slice(1).every((box, i) => {
+    return box.l < boxes[i].l && box.w < boxes[i].w && box.h < boxes[i].h
+  })
 }
 
 type Box = {
