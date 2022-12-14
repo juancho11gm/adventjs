@@ -2,7 +2,7 @@ import assert from 'assert';
 
 function selectSleigh(distance: number, sleighs: Sleigh[]) {
   const battery = 20;
-  const sleigh = sleighs.reverse().find(sleigh => sleigh.consumption * distance <= battery);
+  const sleigh = sleighs.reverse().find(s => s.consumption * distance <= battery);
   return sleigh?.name || null;
 }
 
