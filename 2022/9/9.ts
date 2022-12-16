@@ -7,7 +7,6 @@ function countTime(leds: number[]) {
   return Math.max(...ledsArray.map((led) => led.length)) * timePerLap;
 }
 
-
 try {
   assert.equal(countTime([0, 0, 1, 0, 0]), 28);
   assert.equal(countTime([0, 0, 0, 1]), 21);
