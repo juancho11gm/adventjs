@@ -1,16 +1,16 @@
 import assert from 'assert';
 
 function decorateTree(base: string) {
-  enum rules {
-    'BP' = 'R',
-    'PB' = 'R',
-    'RR' = 'R',
-    'RP' = 'B',
-    'BB' = 'B',
-    'PR' = 'B',
-    'PP' = 'P',
-    'BR' = 'P',
-    'RB' = 'P',
+  const rules = {
+    BB: 'B',
+    BP: 'R',
+    BR: 'P',
+    PB: 'R',
+    PP: 'P',
+    PR: 'B',
+    RB: 'P',
+    RP: 'B',
+    RR: 'R'
   };
 
   const baseArr = base.split(' ');
