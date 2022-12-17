@@ -14,19 +14,27 @@ function decorateTree(base: string) {
   };
 
   const baseArr = base.split(' ');
-  return baseArr.reduce((prev: string[]) => {
-    const [firstArr] = prev;
-    let row = '';
-    firstArr.split(' ').reduce((prevLetter: string, currLetter: string) => {
-      const key = `${prevLetter}${currLetter}` as keyof typeof rules;
-      row += ' ' + rules[key];
-      row = row.trim();
-      return currLetter;
-    });
 
-    row && prev.unshift(row);
-    return prev;
-  }, [base]);
+  const convertRow = (accum: string[], currValue: string, index: number, original: string[]) => {
+    const nextValue = original[index + 1];
+    if (nextValue !== undefined) {
+      const key = `${currValue}${nextValue}` as keyof typeof rules;
+      accum.push(rules[key]);
+    }
+    return accum;
+  }
+
+  const createTree = (accum: string[][], _: string, index: number) => {
+    const row = accum[index].reduce(convertRow, []);
+    accum.push(row);
+    return accum;
+  }
+
+  return baseArr
+    .reduce(createTree, [baseArr])
+    .reverse()
+    .map(r => r.join(' '))
+    .slice(1, baseArr.length + 1);
 }
 
 try {
