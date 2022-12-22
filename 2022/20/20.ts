@@ -1,38 +1,36 @@
 import assert from 'assert';
 
 function howManyReindeers(reindeerTypes: Render[], gifts: Gift[]) {
-  reindeerTypes.sort((a, b) =>
-    b.weightCapacity - a.weightCapacity
-  );
+  reindeerTypes.sort((a, b) => {
+    return b.weightCapacity - a.weightCapacity;
+  });
+  return gifts.map(({ weight, country }: Gift) => {
+    let max = weight;
+    const reindeers = [...reindeerTypes].filter(r =>
+      r.weightCapacity < weight
+    ).reverse();
 
-  return gifts.reduce((accum: any, currCountry: Gift) => {
-    let { weight, country } = currCountry;
-    const types: Reindeer = {};
-    const reindeers = [...reindeerTypes].reverse().filter(t =>
-      t.weightCapacity < weight
-    );
-    while (weight > 0) {
-      reindeers.forEach(r => {
-        if (weight - r.weightCapacity >= 0) {
-          types[r.type] ? types[r.type] += 1 : types[r.type] = 1;
-          weight -= r.weightCapacity;
-        }
+    const res = reindeers.map(({ type }) => ({
+      type,
+      num: 0
+    }));
+
+    reindeers.map((_, i) => {
+      const sliced = reindeers.slice(0, reindeers.length - i);
+      const sum = sliced.reduce((acum, curr) =>
+        acum + curr.weightCapacity, 0
+      );
+      sliced.map((_, i) => {
+        res[i].num += Math.floor(max / sum)
       });
-    }
-
-    accum.push({
-      country: country,
-      reindeers: Object.entries(types).map(
-        ([key, value]) => {
-          return {
-            type: key,
-            num: value
-          }
-        }).reverse()
+      max %= sum;
     })
 
-    return accum;
-  }, []);
+    return {
+      country,
+      reindeers: res.reverse()
+    }
+  });
 }
 
 type Render = {
@@ -43,10 +41,6 @@ type Render = {
 type Gift = {
   country: string;
   weight: number;
-}
-
-type Reindeer = {
-  [key: string]: number
 }
 
 try {
