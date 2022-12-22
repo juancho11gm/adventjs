@@ -7,33 +7,31 @@ function printTable(gifts: Gift[]) {
   const giftsLength = gifts.map(g => g.name.length);
   const quantitiesLength = gifts.map(g => g.quantity.toString().length);
 
-  let maxLengthGifts = [GIFT.length, ...giftsLength].reduce((a, b) => a > b ? a : b);
-  let maxLengthQuantities = [QUANTITY.length, ...quantitiesLength].reduce((a, b) => a > b ? a : b);
+  let maxLenGifts = Math.max(...[GIFT.length, ...giftsLength]);
+  let maxLenQuant = Math.max(...[QUANTITY.length, ...quantitiesLength]);
 
-  const offset = 7; //  2 Start + 3 Mid +  2End
-  const rowLength = maxLengthGifts + maxLengthQuantities + offset;
+  const offset = 7; //  2 Start + 3 Mid + 2 End
+  const rowLength = maxLenGifts + maxLenQuant + offset;
 
   const firstRow = '+'.repeat(rowLength);
   const LastRow = '*'.repeat(rowLength);
 
-  const giftHeader = `${GIFT}${' '.repeat(maxLengthGifts - GIFT.length)}`
-  const quantityHeader = `${QUANTITY}${' '.repeat(maxLengthQuantities - QUANTITY.length)}`;
-  const tableHeader = `| ${giftHeader} | ${quantityHeader} |`;
-  const hr = `| ${'-'.repeat(maxLengthGifts)} | ${'-'.repeat(maxLengthQuantities)} |`;
+  const giftTop = GIFT + ' '.repeat(maxLenGifts - GIFT.length);
+  const quantityTop = QUANTITY + ' '.repeat(maxLenQuant - QUANTITY.length);
+  const tableHeader = `| ${giftTop} | ${quantityTop} |`;
+  const hr = `| ${'-'.repeat(maxLenGifts)} | ${'-'.repeat(maxLenQuant)} |`;
 
-  let giftsRows = '';
-  gifts.forEach(gift => {
-    const giftSpacesDiff = maxLengthGifts - gift.name.length;
-    const giftColumn = `${gift.name}${' '.repeat(giftSpacesDiff)}`;
+  let giftsRows = gifts.reduce((accum: string, { name, quantity }: Gift) => {
+    const giftSpacesDiff = maxLenGifts - name.length;
+    const giftCol = name + ' '.repeat(giftSpacesDiff);
 
-    const quantitySpacesDiff = maxLengthQuantities - gift.quantity.toString().length;
-    const quantityColumn = `${gift.quantity}${' '.repeat(quantitySpacesDiff)}`;
+    const quantitySpacesDiff = maxLenQuant - quantity.toString().length;
+    const quantityCol = quantity + ' '.repeat(quantitySpacesDiff);
 
-    giftsRows += `| ${giftColumn} | ${quantityColumn} |\n`;
-  });
+    return accum += `| ${giftCol} | ${quantityCol} |\n`;
+  }, '');
 
   const table = `${firstRow}\n${tableHeader}\n${hr}\n${giftsRows}${LastRow}`;
-
   return table;
 }
 
