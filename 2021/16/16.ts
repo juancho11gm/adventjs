@@ -1,4 +1,4 @@
-import assert, { strict } from 'assert';
+import assert from 'assert';
 
 function decodeNumber(symbols: string) {
   const dict: Dict = {
@@ -21,9 +21,9 @@ type Dict = {
 }
 
 try {
-  strict.equal(decodeNumber('...'), 3);
-  strict.equal(decodeNumber('.........!'), 107); //  (1 + 1 + 1 + 1 + 1 + 1 + 1 - 1 + 100)
-  strict.equal(decodeNumber(';.W'), NaN); //  (1 + 1 + 1 + 1 + 1 + 1 + 1 - 1 + 100)
+  assert.equal(decodeNumber('...'), 3);
+  assert.equal(decodeNumber('.........!'), 107); //  (1 + 1 + 1 + 1 + 1 + 1 + 1 - 1 + 100)
+  assert.equal(decodeNumber(';.W'), NaN); //  (1 + 1 + 1 + 1 + 1 + 1 + 1 - 1 + 100)
 } catch (error) {
   console.log(error)
 }
