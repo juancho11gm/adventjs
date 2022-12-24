@@ -20,7 +20,7 @@ function executeCommands(commands: string[]) {
     'ADD': (reg1: string, reg2: string) => {
       const index1 = +reg1.charAt(reg1.length - 1);
       const index2 = +reg2.charAt(reg2.length - 1);
-      result[index1] += result[index2];
+      result[index1] = (result[index1] + result[index2]) % 256;
     },
     'DEC': (reg: string) => {
       const index = +reg.charAt(reg.length - 1);
@@ -29,8 +29,7 @@ function executeCommands(commands: string[]) {
     },
     'INC': (reg: string) => {
       const index = +reg.charAt(reg.length - 1);
-      if (result[index] === 255) result[index] = 0;
-      else result[index]++;
+      result[index] = (result[index] + 1) % 256;
     },
     'JMP': (jumps: string, _, i: number) => {
       const repeatInstructions = commands.slice(+jumps, i);
@@ -52,29 +51,49 @@ function executeCommands(commands: string[]) {
 }
 
 type Instructions = {
-  [key: string]: (reg1: string, reg2: string, i: number) => void;
+  [key: string]: (reg1: string,
+    reg2: string,
+    i: number) => void;
 }
 
 try {
-  // assert.deepEqual(
-  //   executeCommands([
-  //     'MOV 5,V00', // V00 es 5
-  //     'MOV 10,V01', // V01 es 10
-  //     'DEC V00', // V00 ahora es 4
-  //     'ADD V00,V01', // V00 = V00 + V01 = 14
-  //   ]),
-  //   [14, 10, 0, 0, 0, 0, 0]
-  // );
+  assert.deepEqual(
+    executeCommands([
+      'MOV 5,V00', // V00 es 5
+      'MOV 10,V01', // V01 es 10
+      'DEC V00', // V00 ahora es 4
+      'ADD V00,V01', // V00 = V00 + V01 = 14
+    ]),
+    [14, 10, 0, 0, 0, 0, 0, 0]
+  );
 
-  // assert.deepEqual(
-  //   executeCommands([
-  //     'MOV 255,V00', // V00 es 255
-  //     'INC V00', // V00 es 256, desborda a 0
-  //     'DEC V01', // V01 es -1, desborda a 255
-  //     'DEC V01', // V01 es 254
-  //   ]),
-  //   [0, 254, 0, 0, 0, 0, 0]
-  // );
+  assert.deepEqual(
+    executeCommands([
+      'MOV 255,V00', // V00 es 255
+      'INC V00', // V00 es 256, desborda a 0
+      'DEC V01', // V01 es -1, desborda a 255
+      'DEC V01', // V01 es 254
+    ]),
+    [0, 254, 0, 0, 0, 0, 0, 0]
+  );
+
+  assert.deepEqual(executeCommands([
+    'MOV 255,V00',
+    'INC V00',
+    'DEC V01',
+    'DEC V01'
+  ]),
+    [
+      0,
+      254,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  )
 
   assert.deepEqual(
     executeCommands([
